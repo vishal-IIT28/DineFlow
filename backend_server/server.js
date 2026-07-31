@@ -7,6 +7,7 @@ import restaurantRouter from './routes/restaurantRoutes.js';
 import bookingRouter from './routes/bookingRoutes.js';
 import ownerRouter from './routes/ownerRoutes.js'; // 1. Added ownerRoutes import
 import './config/cloudinary.js'; // 2. Initialized Cloudinary config
+import adminRouter from './routes/adminRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/restaurants', restaurantRouter);
 app.use('/api/bookings', bookingRouter);
 app.use('/api/owner', ownerRouter); // 3. Registered owner route endpoints
+app.use('/api/admin', adminRouter); 
 
 //Global error handling 
 app.use((err, req, res, next) => {
