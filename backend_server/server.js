@@ -4,6 +4,7 @@ import 'dotenv/config';
 import connectDB from './config/db.js'; // 1. Added missing import for connectDB
 import authRoutes from './routes/authRoutes.js'; 
 import restaurantRouter from './routes/restaurantRoutes.js'; // 1. Added missing import for restaurantRoutes
+import bookingRouter from './routes/bookingRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/restaurants', restaurantRouter);
+app.use('/api/bookings', bookingRouter);
 
 //Global error handling 
 app.use((err, req, res, next) => {

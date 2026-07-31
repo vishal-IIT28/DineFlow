@@ -26,4 +26,5 @@ bookingSchema.pre('save', async function (next) {
     next();
 });
 
-export const Booking = model('Booking', bookingSchema);
+const Booking = model('Booking', bookingSchema);
+export default Booking;
