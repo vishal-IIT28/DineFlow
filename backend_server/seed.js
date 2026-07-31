@@ -170,6 +170,7 @@ const seedData = async () => {
         exclusive: true,
     },
     ];
+    
 
     console.log("Inserting restaurants...");
 
