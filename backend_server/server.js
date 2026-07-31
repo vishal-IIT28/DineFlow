@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import connectDB from './config/db.js'; // 1. Added missing import for connectDB
+import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js'; 
-import restaurantRouter from './routes/restaurantRoutes.js'; // 1. Added missing import for restaurantRoutes
+import restaurantRouter from './routes/restaurantRoutes.js';
 import bookingRouter from './routes/bookingRoutes.js';
+import ownerRouter from './routes/ownerRoutes.js'; // 1. Added ownerRoutes import
+import './config/cloudinary.js'; // 2. Initialized Cloudinary config
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/restaurants', restaurantRouter);
 app.use('/api/bookings', bookingRouter);
+app.use('/api/owner', ownerRouter); // 3. Registered owner route endpoints
 
 //Global error handling 
 app.use((err, req, res, next) => {
@@ -31,11 +34,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ 
     message: err.message || 'Internal Server Error',
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
-
    });
 });
 
-// 2. Start the Express server
+// Start the Express server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
