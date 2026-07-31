@@ -4,7 +4,7 @@
 import pkg from 'express';
 const {Request, NextFunction, Response} = pkg;
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import User from '../models/User.js';
 
 // Middleware to protect routes
 export const protect = async (req, res, next) => {
