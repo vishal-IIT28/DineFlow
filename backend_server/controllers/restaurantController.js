@@ -1,6 +1,8 @@
 // backend_server/controllers/restaurantController.js
 
-import { Request, Response } from 'express';
+// import { Request, Response } from 'express';
+import pkg from 'express';
+const { Request, Response } = pkg;
 import Restaurant from '../models/Restaurant.js';
 import jwt from 'jsonwebtoken';
 
