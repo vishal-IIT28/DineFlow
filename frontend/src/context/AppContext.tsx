@@ -2,8 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
 // import { dummyUser } from "../assets/assets.js";
-import api from "../../lib/api.ts";
-// import { toast } from "react-hot-toast/headless";
+import api from "../lib/api.ts";
 import { toast } from "react-hot-toast"; // ✅ Correct import
 
 interface UserType {

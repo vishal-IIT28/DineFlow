@@ -11,8 +11,7 @@ import RestaurantHero from "../components/restaurant/RestaurantHero.tsx";
 import RestaurantInfo from "../components/restaurant/RestaurantInfo.tsx";
 import RestaurantReviews from "../components/restaurant/RestaurantReviews.tsx";
 import BookingWidget from "../components/restaurant/BookingWidget.tsx";
-import { dummyAvailability, dummyRestaurant } from "../assets/assets.ts";
-import api from "../../lib/api.ts";
+import api from "../lib/api.ts";
 
 export default function RestaurantDetail() {
     const { slug } = useParams<{ slug: string }>();
@@ -34,8 +33,8 @@ export default function RestaurantDetail() {
             try {
                 setLoading(true);
                 // Fetch restaurant details from API
-                const response = await api.get(`/api/restaurants/${slug}`);
-                setRestaurant(response.data);
+                const response = await api.get(`/restaurants/${slug}`);
+                setRestaurant(response.data?.data || response.data);
                 
                 // Initialize booking values
                 const today = new Date().toISOString().split("T")[0];
@@ -57,8 +56,16 @@ export default function RestaurantDetail() {
 
     useEffect(() => {
         const fetchAvailability = async () => {
-            setSlotsAvailability(dummyAvailability);
-            setLoadingSlots(false);
+            if (!restaurant?._id || !selectedDate) return;
+            try {
+                setLoadingSlots(true);
+                const response = await api.get(`/restaurants/${restaurant._id}/availability?date=${selectedDate}`);
+                setSlotsAvailability(response.data?.data || response.data || []);
+            } catch (error) {
+                console.error("Error fetching availability:", error);
+            } finally {
+                setLoadingSlots(false);
+            }
         };
         fetchAvailability();
     }, [restaurant?._id, selectedDate]);

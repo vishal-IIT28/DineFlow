@@ -8,7 +8,7 @@ import RestaurantCard from "../components/RestaurantCard.tsx";
 import AuthModal from "../components/AuthModal.tsx";
 import { CalendarIcon, UsersIcon, ClockIcon, MapPinIcon, CalendarDaysIcon } from "lucide-react";
 import toast from "react-hot-toast";
-import { dummyFeaturedRestaurants, dummyMyBookingsData } from "../assets/assets.ts";
+import api from "../lib/api.ts";
 
 export default function Dashboard() {
     const { user } = useAppContext();
@@ -20,8 +20,16 @@ export default function Dashboard() {
     // Fetch user bookings
     useEffect(() => {
         const fetchBookings = async () => {
-            setBookings(dummyMyBookingsData);
-            setLoadingBookings(false);
+            try {
+                setLoadingBookings(true);
+                const response = await api.get("/bookings/my");
+                setBookings(response.data);
+            } catch (error) {
+                console.error("Error fetching user bookings:", error);
+                toast.error("Failed to load your reservations.");
+            } finally {
+                setLoadingBookings(false);
+            }
         };
 
         if (user) {
@@ -32,7 +40,12 @@ export default function Dashboard() {
     // Fetch generic recommendations
     useEffect(() => {
         const fetchRecommendations = async () => {
-            setRecommendations(dummyFeaturedRestaurants);
+            try {
+                const response = await api.get("/restaurants/featured");
+                setRecommendations(response.data?.data || response.data || []);
+            } catch (error) {
+                console.error("Error fetching recommendations:", error);
+            }
         };
         fetchRecommendations();
     }, []);
@@ -43,10 +56,11 @@ export default function Dashboard() {
         }
 
         try {
+            await api.put(`/bookings/${bookingId}/cancel`);
             setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: "cancelled" } : b)));
             toast.success("Reservation cancelled successfully.");
         } catch (error: any) {
-            toast.error(error?.response?.data?.message || error?.message);
+            toast.error(error?.response?.data?.message || error?.message || "Failed to cancel booking.");
         }
     };
 

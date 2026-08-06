@@ -7,9 +7,8 @@ import RestaurantCard from "../components/RestaurantCard.tsx";
 import AuthModal from "../components/AuthModal.tsx";
 import { SlidersHorizontal, Search as SearchIcon, X, Check, MapPin, SearchXIcon } from "lucide-react";
 // import { dummyRestaurant } from "../assets/assets.ts";
-import api from "../../lib/api.ts";
-import { toast } from "react-hot-toast/headless";
-
+import api from "../lib/api.ts";
+import toast from "react-hot-toast";
 
 export default function Search() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -38,31 +37,14 @@ export default function Search() {
         })();
     }, [searchVal, locationVal]);
 
-    // useEffect(() => {
-    //     const fetchRestaurants = async () => {
-    //         try  {
-    //             setLoading(true);
-    //             //construct query string from searchParams
-    //             const response = await api.get(`/restaurants/search?${searchParams.toString()}`);
-    //             setRestaurants(response.data);
-    //         } catch (error) {
-    //             console.error("Error fetching restaurants:", error);
-    //             toast.error("Failed to load restaurants. Please try again later.");
-    //             setRestaurants([]);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchRestaurants();
-    // }, [searchParams]);
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
                 setLoading(true);
-                const response = await api.get(`/restaurants/search?${searchParams.toString()}`);
+                const queryStr = searchParams.toString();
+                const response = await api.get(`/restaurants${queryStr ? `?${queryStr}` : ""}`);
                 
-                // Extract array safely depending on your backend structure
+                // Extract array safely depending on backend structure
                 const data = Array.isArray(response.data) 
                     ? response.data 
                     : response.data?.restaurants || response.data?.data || [];

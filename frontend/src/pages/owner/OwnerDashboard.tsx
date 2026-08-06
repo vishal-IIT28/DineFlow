@@ -10,7 +10,8 @@ import PendingApproval from "../../components/owner/PendingApproval.tsx";
 import RequestRejected from "../../components/owner/RequestRejected.tsx";
 import OwnerBookings from "../../components/owner/OwnerBookings.tsx";
 import OwnerProfileDetails from "../../components/owner/OwnerProfileDetails.tsx";
-import { dummyMyBookingsData, dummyRestaurant } from "../../assets/assets.ts";
+import api from "../../lib/api.ts";
+import toast from "react-hot-toast";
 
 export default function OwnerDashboard() {
     const { logout } = useAppContext();
@@ -20,13 +21,26 @@ export default function OwnerDashboard() {
     const [activeTab, setActiveTab] = useState<"bookings" | "details">("bookings");
 
     const fetchOwnerData = async () => {
-        setRestaurant(dummyRestaurant[0]);
-        setBookings(dummyMyBookingsData);
-        setLoading(false);
+        try {
+            setLoading(true);
+            const restRes = await api.get("/owner/restaurant");
+            const restData = restRes.data;
+            setRestaurant(restData);
+
+            if (restData && restData.status === "approved") {
+                const bookingsRes = await api.get("/owner/bookings");
+                setBookings(bookingsRes.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching owner data:", error);
+            toast.error("Failed to load restaurant portal details.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        (async () => await fetchOwnerData())();
+        fetchOwnerData();
     }, []);
 
     if (loading) {

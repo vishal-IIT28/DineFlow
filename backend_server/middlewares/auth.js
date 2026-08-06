@@ -49,7 +49,7 @@ export const adminOnly = (req, res, next) => {
 
 // Middleware to check if the user is a restaurant owner
 export const restaurantOwnerOnly = (req, res, next) => {
-    if (req.user && (req.user.role === 'restaurant_owner' || req.user.role === 'admin')) {
+    if (req.user && (req.user.role === 'owner' || req.user.role === 'restaurant_owner' || req.user.role === 'admin')) {
         next();
     } else {
         res.status(403).json({ message: 'Access denied. Restaurant owner only.' });
