@@ -105,7 +105,7 @@ export default function RestaurantDetail() {
                     {/* Left Column (Details, Menu, Reviews) */}
                     <div className="lg:col-span-8 space-y-12">
                         <RestaurantInfo restaurant={restaurant} />
-                        <RestaurantReviews />
+                        <RestaurantReviews restaurantId={restaurant._id} />
                     </div>
 
                     {/* Right Column (Sticky Reservation Widget) */}
@@ -131,3 +131,4 @@ export default function RestaurantDetail() {
         </div>
     );
 }
+

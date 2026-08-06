@@ -6,7 +6,6 @@ import Footer from "../components/Footer.tsx";
 import RestaurantCard from "../components/RestaurantCard.tsx";
 import AuthModal from "../components/AuthModal.tsx";
 import { SlidersHorizontal, Search as SearchIcon, X, Check, MapPin, SearchXIcon } from "lucide-react";
-// import { dummyRestaurant } from "../assets/assets.ts";
 import api from "../lib/api.ts";
 import toast from "react-hot-toast";
 
@@ -53,7 +52,7 @@ export default function Search() {
             } catch (error) {
                 console.error("Error fetching restaurants:", error);
                 toast.error("Failed to load restaurants. Please try again later.");
-                setRestaurants([]); // Fallback on error
+                setRestaurants([]);
             } finally {
                 setLoading(false);
             }
