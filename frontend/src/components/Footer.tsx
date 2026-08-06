@@ -37,7 +37,7 @@ export default function Footer() {
                 <div className="flex flex-col gap-4">
                     <h4 className="text-xs font-medium tracking-widest text-primary uppercase">CONTACT</h4>
 
-                    <p className="text-sm text-black/55">support@example.com</p>
+                    <p className="text-sm text-black/55">vishal.kr38897@gmail.com</p>
 
                     <div className="flex gap-4 mt-2">
                         {socialLinks.map(({ icon: Icon, href }, index) => (

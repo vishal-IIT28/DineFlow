@@ -11,7 +11,7 @@ const bookingSchema = new Schema(
         guests: { type: Number, required: true },
         occasion: { type: String, required: false },
         specialRequests: { type: String, required: false },
-        status: { type: String, enum: ["pending", "confirmed", "cancelled", "completed"], default: 'pending' },
+        status: { type: String, enum: ["pending", "confirmed", "rejected", "cancelled", "completed"], default: 'pending' },
         bookingId: { type: String, unique: true },
     },
     { timestamps: true }
@@ -28,3 +28,4 @@ bookingSchema.pre('save', async function (next) {
 
 const Booking = model('Booking', bookingSchema);
 export default Booking;
+

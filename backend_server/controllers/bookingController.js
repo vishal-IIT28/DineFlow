@@ -35,7 +35,7 @@ export const createBooking = async (req, res) => {
     });
 
     const bookedSeats = existingBookings.reduce((total, booking) => total + booking.guests, 0);
-    const totalSeats = restaurant.totalSeats || 20;
+    const totalSeats = restaurant.totalSeats || 0;
     const availableSeats = totalSeats - bookedSeats;
 
     if (requestedGuests > availableSeats) {

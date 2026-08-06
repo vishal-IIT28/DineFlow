@@ -52,7 +52,7 @@ export const approveRestaurant = async (req, res) => {
 export const getAdminStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments({ role: "user" });
-    const totalOwners = await User.countDocuments({ role: "owner" });
+    const totalOwners = await User.countDocuments({ role: "restaurant_owner" });
     const totalBookings = await Booking.countDocuments({});
     const totalRestaurants = await Restaurant.countDocuments({});
 

@@ -109,7 +109,7 @@ export default function Navbar() {
                                         </Link>
                                     )}
 
-                                    {user.role === "owner" && (
+                                    {user.role === "restaurant_owner" && (
                                         <Link
                                             to="/owner/dashboard"
                                             className="flex items-center gap-3 px-4 py-2.5 text-xs text-black/55 hover:text-primary hover:bg-surface transition-colors cursor-pointer"
@@ -195,7 +195,7 @@ export default function Navbar() {
                                     Admin Console
                                 </Link>
                             )}
-                            {user.role === "owner" && (
+                            {user.role === "restaurant_owner" && (
                                 <Link to="/owner/dashboard" className="text-sm font-medium text-black/55 hover:text-primary">
                                     Owner Console
                                 </Link>

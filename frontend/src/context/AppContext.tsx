@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
-// import { dummyUser } from "../assets/assets.js";
 import api from "../lib/api.ts";
-import { toast } from "react-hot-toast"; // ✅ Correct import
+import { toast } from "react-hot-toast";
 
 interface UserType {
     _id: string;
     name: string;
     email: string;
     phone?: string;
-    role: "user" | "admin" | "owner";
+    role: "user" | "admin" | "restaurant_owner";
 }
 
 interface AppContextType {
@@ -134,3 +132,4 @@ export const useAppContext = () => {
     }
     return context;
 };
+

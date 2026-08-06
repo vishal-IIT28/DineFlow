@@ -87,7 +87,7 @@ export const createOwnerRestaurant = async (req, res) => {
     const parsedSlots =
       typeof availableSlots === "string"
         ? availableSlots.split(",").map((s) => s.trim())
-        : availableSlots || ["17:00", "18:00", "19:00", "20:00", "21:00"];
+        : availableSlots || [];
 
     const restaurant = await Restaurant.create({
       name,

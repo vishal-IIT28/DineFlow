@@ -22,7 +22,6 @@ export default function AdminDashboard() {
 
     const fetchAdminData = async () => {
         try {
-            setLoading(true);
             const [restRes, statsRes] = await Promise.all([
                 api.get("/admin/restaurants"),
                 api.get("/admin/stats")
@@ -51,7 +50,7 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        fetchAdminData();
+        void Promise.resolve().then(fetchAdminData);
     }, []);
 
     if (loading) {

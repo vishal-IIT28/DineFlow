@@ -3,6 +3,7 @@
 import Restaurant from '../models/Restaurant.js';
 import User from '../models/User.js';
 import Booking from '../models/Booking.js';
+import Review from '../models/Review.js';
 import jwt from 'jsonwebtoken';
 
 // Get all restaurants with search, filter, and pagination
@@ -106,7 +107,7 @@ export const getRestaurantBySlug = async (req, res) => {
                 const token = req.headers.authorization.split(' ')[1];
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 const user = await User.findById(decoded.id);
-                if (user && (user.role === 'admin' || (user.role === 'owner' && restaurant.owner.toString() === user._id.toString()))) {
+                if (user && (user.role === 'admin' || (user.role === 'restaurant_owner' && restaurant.owner.toString() === user._id.toString()))) {
                     isAuthorized = true;
                 }
             } catch (error) {
@@ -149,7 +150,7 @@ export const getRestaurantAvailability = async (req, res) => {
         status: { $in: ['pending', 'confirmed'] } // only consider active bookings
     });
 
-    const slots = restaurant.availableSlots || ["17:00", "18:00", "19:00", "20:00", "21:00"];
+    const slots = Array.isArray(restaurant.availableSlots) ? restaurant.availableSlots : [];
 
     // Map slots to available seats
     const availability = slots.map(slot => {
@@ -157,7 +158,7 @@ export const getRestaurantAvailability = async (req, res) => {
         const bookedSeats = bookings
             .filter(booking => booking.time === slotTime)
             .reduce((total, booking) => total + booking.guests, 0);
-        const totalSeats = restaurant.totalSeats || 20; // Default to 20 if not specified
+        const totalSeats = restaurant.totalSeats || 0;
         const availableSeats = Math.max(0, totalSeats - bookedSeats);
 
         return {
@@ -170,6 +171,20 @@ export const getRestaurantAvailability = async (req, res) => {
     res.status(200).json({ data: availability });
   } catch (error) {
     console.error('Error in getRestaurantAvailability:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+// Get reviews for a restaurant
+// GET /api/restaurants/:id/reviews
+export const getRestaurantReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({ restaurant: req.params.id })
+      .populate("user", "name")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ data: reviews });
+  } catch (error) {
+    console.error('Error in getRestaurantReviews:', error);
     res.status(500).json({ message: error.message });
   }
 };

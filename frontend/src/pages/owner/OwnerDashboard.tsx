@@ -22,7 +22,6 @@ export default function OwnerDashboard() {
 
     const fetchOwnerData = async () => {
         try {
-            setLoading(true);
             const restRes = await api.get("/owner/restaurant");
             const restData = restRes.data;
             setRestaurant(restData);
@@ -40,7 +39,7 @@ export default function OwnerDashboard() {
     };
 
     useEffect(() => {
-        fetchOwnerData();
+        void Promise.resolve().then(fetchOwnerData);
     }, []);
 
     if (loading) {
