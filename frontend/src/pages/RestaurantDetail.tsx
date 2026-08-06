@@ -12,6 +12,7 @@ import RestaurantInfo from "../components/restaurant/RestaurantInfo.tsx";
 import RestaurantReviews from "../components/restaurant/RestaurantReviews.tsx";
 import BookingWidget from "../components/restaurant/BookingWidget.tsx";
 import { dummyAvailability, dummyRestaurant } from "../assets/assets.ts";
+import api from "../../lib/api.ts";
 
 export default function RestaurantDetail() {
     const { slug } = useParams<{ slug: string }>();
@@ -30,8 +31,23 @@ export default function RestaurantDetail() {
 
     useEffect(() => {
         const fetchRestaurant = async () => {
-            setRestaurant(dummyRestaurant.find((r) => r.slug === slug));
-            setLoading(false);
+            try {
+                setLoading(true);
+                // Fetch restaurant details from API
+                const response = await api.get(`/api/restaurants/${slug}`);
+                setRestaurant(response.data);
+                
+                // Initialize booking values
+                const today = new Date().toISOString().split("T")[0];
+                setSelectedDate(today);
+            }
+            catch (error) {
+                console.error("Error fetching restaurant details:", error);
+                toast.error("Failed to load restaurant details. Please try again later.");
+                navigate("/search");
+            } finally {
+                setLoading(false);
+            }
         };
 
         if (slug) {

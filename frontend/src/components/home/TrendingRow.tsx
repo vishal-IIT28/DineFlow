@@ -9,6 +9,9 @@ interface TrendingRowProps {
 }
 
 export default function TrendingRow({ trending, loading }: TrendingRowProps) {
+    // Ensure trending is always treatable as an array
+    const safeTrending = Array.isArray(trending) ? trending : [];
+
     return (
         <section className="py-24 bg-surface-container-low/50">
             <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -33,8 +36,8 @@ export default function TrendingRow({ trending, loading }: TrendingRowProps) {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {trending.slice(0, 3).map((r) => (
-                            <RestaurantCard key={r._id} restaurant={r} />
+                        {safeTrending.slice(0, 3).map((r) => (
+                            <RestaurantCard key={r._id || r.id} restaurant={r} />
                         ))}
                     </div>
                 )}
