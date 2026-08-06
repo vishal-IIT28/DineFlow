@@ -9,7 +9,8 @@ import { ShieldCheckIcon, CheckCircleIcon, BarChart3Icon } from "lucide-react";
 // Subcomponents
 import AdminApprovals from "../../components/admin/AdminApprovals.tsx";
 import AdminStats from "../../components/admin/AdminStats.tsx";
-import { dummyAdminStats, dummyRestaurant } from "../../assets/assets.ts";
+import api from "../../lib/api.ts";
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
     const { logout } = useAppContext();
@@ -20,18 +21,37 @@ export default function AdminDashboard() {
     const [btnLoading, setBtnLoading] = useState<string | null>(null);
 
     const fetchAdminData = async () => {
-        setRestaurants(dummyRestaurant);
-        setStats(dummyAdminStats);
-        setLoading(false);
+        try {
+            setLoading(true);
+            const [restRes, statsRes] = await Promise.all([
+                api.get("/admin/restaurants"),
+                api.get("/admin/stats")
+            ]);
+            setRestaurants(restRes.data || []);
+            setStats(statsRes.data || null);
+        } catch (error) {
+            console.error("Error fetching admin data:", error);
+            toast.error("Failed to load admin console data.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleApproveStatus = async (restaurantId: string, status: "approved" | "rejected") => {
-        console.log(restaurantId, status);
-        setBtnLoading(null);
+        try {
+            setBtnLoading(restaurantId);
+            const response = await api.put(`/admin/restaurants/${restaurantId}/approve`, { status });
+            setRestaurants((prev) => prev.map((r) => (r._id === restaurantId ? response.data : r)));
+            toast.success(`Restaurant ${status} successfully.`);
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || `Failed to update restaurant status`);
+        } finally {
+            setBtnLoading(null);
+        }
     };
 
     useEffect(() => {
-        (async () => await fetchAdminData())();
+        fetchAdminData();
     }, []);
 
     if (loading) {
