@@ -6,7 +6,10 @@ import Footer from "../components/Footer.tsx";
 import RestaurantCard from "../components/RestaurantCard.tsx";
 import AuthModal from "../components/AuthModal.tsx";
 import { SlidersHorizontal, Search as SearchIcon, X, Check, MapPin, SearchXIcon } from "lucide-react";
-import { dummyRestaurant } from "../assets/assets.ts";
+// import { dummyRestaurant } from "../assets/assets.ts";
+import api from "../../lib/api.ts";
+import { toast } from "react-hot-toast/headless";
+
 
 export default function Search() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -35,10 +38,43 @@ export default function Search() {
         })();
     }, [searchVal, locationVal]);
 
+    // useEffect(() => {
+    //     const fetchRestaurants = async () => {
+    //         try  {
+    //             setLoading(true);
+    //             //construct query string from searchParams
+    //             const response = await api.get(`/restaurants/search?${searchParams.toString()}`);
+    //             setRestaurants(response.data);
+    //         } catch (error) {
+    //             console.error("Error fetching restaurants:", error);
+    //             toast.error("Failed to load restaurants. Please try again later.");
+    //             setRestaurants([]);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchRestaurants();
+    // }, [searchParams]);
     useEffect(() => {
         const fetchRestaurants = async () => {
-            setRestaurants(dummyRestaurant);
-            setLoading(false);
+            try {
+                setLoading(true);
+                const response = await api.get(`/restaurants/search?${searchParams.toString()}`);
+                
+                // Extract array safely depending on your backend structure
+                const data = Array.isArray(response.data) 
+                    ? response.data 
+                    : response.data?.restaurants || response.data?.data || [];
+                    
+                setRestaurants(data);
+            } catch (error) {
+                console.error("Error fetching restaurants:", error);
+                toast.error("Failed to load restaurants. Please try again later.");
+                setRestaurants([]); // Fallback on error
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchRestaurants();
